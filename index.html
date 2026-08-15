@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Học Tập Pro - Luyện Nghe AI Thông Minh</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen p-4">
+    <main class="max-w-2xl mx-auto bg-white p-6 rounded-xl shadow-lg">
+        <!-- Màn hình chính -->
+        <div id="main-screen" class="space-y-4">
+            <h1 class="text-2xl font-bold text-center text-indigo-700">App Học Tập Pro</h1>
+            <button onclick="showScreen('vocab-input')" class="w-full p-6 bg-indigo-100 rounded-xl font-bold hover:bg-indigo-200 text-indigo-900 text-lg flex items-center justify-center gap-2">📖 Từ Vựng</button>
+            <button onclick="showScreen('qa-input')" class="w-full p-6 bg-emerald-100 rounded-xl font-bold hover:bg-emerald-200 text-emerald-900 text-lg flex items-center justify-center gap-2">❓ Câu Hỏi</button>
+            <button onclick="showScreen('listening-input')" class="w-full p-6 bg-purple-100 rounded-xl font-bold hover:bg-purple-200 text-purple-900 text-lg flex items-center justify-center gap-2">🎧 Luyện Nghe AI & Điền Từ</button>
+        </div>
+
+        <!-- Màn hình nhập Từ Vựng -->
+        <div id="vocab-input" class="hidden space-y-4">
+            <h2 class="font-bold text-xl text-indigo-800">Nhập Từ Vựng</h2>
+            <div id="vocab-rows" class="space-y-2"></div>
+            <button onclick="addRow('vocab')" class="text-indigo-600 font-bold hover:underline">+ Thêm dòng</button>
+            <div class="border-t pt-4">
+                <div class="flex gap-2">
+                    <button onclick="startPractice('vocab', 'vi2en')" class="flex-1 py-2 bg-indigo-600 text-white rounded font-medium hover:bg-indigo-700">Việt sang Anh</button>
+                    <button onclick="startPractice('vocab', 'en2vi')" class="flex-1 py-2 bg-indigo-600 text-white rounded font-medium hover:bg-indigo-700">Anh sang Việt</button>
+                </div>
+            </div>
+            <button onclick="clearData('vocab')" class="w-full py-2 bg-red-100 text-red-600 rounded hover:bg-red-200">🧹 Xóa tất cả</button>
+            <button onclick="showScreen('main-screen')" class="w-full py-2 border rounded hover:bg-gray-100">⬅ Quay về</button>
+        </div>
+
+        <!-- Màn hình nhập Câu Hỏi -->
+        <div id="qa-input" class="hidden space-y-4">
+            <h2 class="font-bold text-xl text-emerald-800">Nhập Câu Hỏi</h2>
+            <div id="qa-rows" class="space-y-2"></div>
+            <button onclick="addRow('qa')" class="text-emerald-600 font-bold hover:underline">+ Thêm dòng</button>
+            <div class="border-t pt-4">
+                <div class="flex gap-2">
+                    <button onclick="startPractice('qa', 'a2q')" class="flex-1 py-2 bg-emerald-600 text-white rounded font-medium hover:bg-emerald-700">Trả lời → Hỏi</button>
+                    <button onclick="startPractice('qa', 'q2a')" class="flex-1 py-2 bg-emerald-600 text-white rounded font-medium hover:bg-emerald-700">Hỏi → Trả lời</button>
+                </div>
+            </div>
+            <button onclick="clearData('qa')" class="w-full py-2 bg-red-100 text-red-600 rounded hover:bg-red-200">🧹 Xóa tất cả</button>
+            <button onclick="showScreen('main-screen')" class="w-full py-2 border rounded hover:bg-gray-100">⬅ Quay về</button>
+        </div>
+
+        <!-- Màn hình nhập Luyện Nghe -->
+        <div id="listening-input" class="hidden space-y-4">
+            <h2 class="font-bold text-xl text-purple-800">Nhập Từ Vựng Luyện Nghe</h2>
+            <p class="text-sm text-gray-500">AI sẽ tự động nhận diện ý nghĩa của từng từ bạn nhập để thiết kế ra bài luyện nghe tự nhiên nhất!</p>
+            <div id="listening-rows" class="space-y-2"></div>
+            <button onclick="addRow('listening')" class="text-purple-600 font-bold hover:underline">+ Thêm dòng</button>
+            
+            <div class="border-t pt-4">
+                <button onclick="startListeningPractice()" class="w-full py-3 bg-purple-600 text-white font-bold rounded-lg hover:bg-purple-700">🤖 AI Tạo Bài Luyện Nghe</button>
+            </div>
+            <button onclick="clearData('listening')" class="w-full py-2 bg-red-100 text-red-600 rounded hover:bg-red-200">🧹 Xóa tất cả</button>
+            <button onclick="showScreen('main-screen')" class="w-full py-2 border rounded hover:bg-gray-100">⬅ Quay về</button>
+        </div>
+
+        <!-- Màn hình Quiz & Ôn Tập -->
+        <div id="quiz-area" class="hidden space-y-4">
+            <div id="mood-board" class="text-center text-3xl font-bold py-2 hidden"></div>
+            <div id="quiz-list" class="space-y-4"></div>
+            <button id="btn-check" onclick="checkAnswers()" class="w-full py-3 bg-blue-600 text-white font-bold rounded hover:bg-blue-700">✅ Hoàn thành</button>
+            <button onclick="showScreen('main-screen')" class="w-full py-2 border rounded hover:bg-gray-100">❌ Thoát</button>
+        </div>
+
+        <!-- Màn hình Luyện Nghe Chi Tiết -->
+        <div id="listening-quiz-area" class="hidden space-y-6">
+            <h2 class="font-bold text-xl text-purple-800 text-center">🎧 Màn Chơi Luyện Nghe AI</h2>
+            
+            <div class="bg-purple-50 p-4 rounded-xl border border-purple-200 text-center space-y-3">
+                <p class="text-sm font-semibold text-purple-700">Bấm nút bên dưới để nghe toàn bộ đoạn văn AI đã thiết kế:</p>
+                <button onclick="playFullStory()" class="px-6 py-3 bg-purple-600 text-white font-bold rounded-full shadow-lg hover:bg-purple-700 transition flex items-center gap-2 mx-auto text-lg">
+                    🔊 Nghe Toàn Bộ Đoạn Văn
+                </button>
+            </div>
+
+            <div id="story-gaps-container" class="p-5 bg-gray-50 border rounded-xl leading-relaxed text-lg space-y-3"></div>
+
+            <div id="translation-result" class="hidden p-4 bg-emerald-50 border border-emerald-300 rounded-xl space-y-2">
+                <h3 class="font-bold text-emerald-800">🎉 Hoàn thành! Bản dịch chi tiết toàn bài:</h3>
+                <p id="full-english-text" class="text-gray-800 font-medium italic"></p>
+                <hr class="border-emerald-200">
+                <p id="full-vietnamese-text" class="text-emerald-900"></p>
+            </div>
+
+            <button id="btn-check-listening" onclick="checkListeningAnswers()" class="w-full py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700">✅ Kiểm Tra Đáp Án</button>
+            <button onclick="showScreen('main-screen')" class="w-full py-2 border rounded hover:bg-gray-100">❌ Thoát</button>
+        </div>
+    </main>
+
+    <script>
+        let data = JSON.parse(localStorage.getItem('studyDataPro')) || { 
+            vocab: [{en: "apple", vi: "quả táo"}, {en: "learn", vi: "học tập"}], 
+            qa: [{q: "What is your name?", a: "My name is Nam."}], 
+            listening: [
+                {en: "hello", vi: "chào"}, 
+                {en: "slender", vi: "mảnh mai"}, 
+                {en: "careful", vi: "cẩn thận"}
+            ] 
+        };
+
+        let currentStoryEnglish = "";
+        let currentStoryVietnamese = "";
+
+        function saveData() { localStorage.setItem('studyDataPro', JSON.stringify(data)); }
+
+        function showScreen(id) {
+            ['main-screen', 'vocab-input', 'qa-input', 'listening-input', 'quiz-area', 'listening-quiz-area'].forEach(s => {
+                const elem = document.getElementById(s);
+                if(elem) elem.classList.add('hidden');
+            });
+            const targetElem = document.getElementById(id);
+            if(targetElem) targetElem.classList.remove('hidden');
+
+            if(id === 'vocab-input') renderRows('vocab');
+            if(id === 'qa-input') renderRows('qa');
+            if(id === 'listening-input') renderRows('listening');
+        }
+
+        function addRow(type) { 
+            if(!data[type]) data[type] = [];
+            data[type].push({en: '', vi: '', q: '', a: ''}); 
+            renderRows(type); 
+        }
+
+        function renderRows(type) {
+            saveData();
+            const container = document.getElementById(type + '-rows');
+            if(!container) return;
+
+            let p1 = (type === 'vocab' || type === 'listening') ? 'Tiếng Anh (en)' : 'Câu hỏi (q)';
+            let p2 = (type === 'vocab' || type === 'listening') ? 'Tiếng Việt (vi)' : 'Câu trả lời (a)';
+
+            container.innerHTML = (data[type] || []).map((d, i) => `
+                <div class="flex gap-2 items-center">
+                    <input placeholder="${p1}" class="border p-2 w-full rounded focus:ring-2 focus:ring-indigo-400 outline-none" value="${(type==='vocab'||type==='listening') ? (d.en||'') : (d.q||'')}" oninput="updateDataField('${type}', ${i}, 'first', this.value)">
+                    <input placeholder="${p2}" class="border p-2 w-full rounded focus:ring-2 focus:ring-indigo-400 outline-none" value="${(type==='vocab'||type==='listening') ? (d.vi||'') : (d.a||'')}" oninput="updateDataField('${type}', ${i}, 'second', this.value)">
+                    <button onclick="data['${type}'].splice(${i},1); renderRows('${type}')" class="text-red-500 font-bold px-2 hover:bg-red-50 rounded">X</button>
+                </div>
+            `).join('');
+        }
+
+        function updateDataField(type, index, fieldType, val) {
+            if(type === 'vocab' || type === 'listening') {
+                if(fieldType === 'first') data[type][index].en = val;
+                else data[type][index].vi = val;
+            } else {
+                if(fieldType === 'first') data[type][index].q = val;
+                else data[type][index].a = val;
+            }
+            saveData();
+        }
+
+        function clearData(type) {
+            if(confirm("Xóa sạch danh sách?")) { data[type] = []; renderRows(type); }
+        }
+
+        function speakText(text, lang = 'en-US') {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = lang;
+                utterance.rate = 0.85;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function shuffleArray(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // --- ÔN TẬP TỪ VỰNG & CÂU HỎI ---
+        function startPractice(type, mode) {
+            const listData = data[type] || [];
+            const items = [...listData].filter(d => {
+                if (type === 'vocab') return (d.en || '').trim() !== '';
+                return (d.q || '').trim() !== '';
+            }).sort(() => Math.random() - 0.5);
+            
+            if(items.length === 0) { alert("Chưa có dữ liệu!"); return; }
+            
+            const btn = document.getElementById('btn-check');
+            if(btn) {
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+
+            const mood = document.getElementById('mood-board');
+            if(mood) mood.classList.add('hidden');
+            
+            showScreen('quiz-area');
+            const list = document.getElementById('quiz-list');
+            if(!list) return;
+
+            list.innerHTML = items.map((d, i) => {
+                let q = "", ans = "";
+                if(type === 'vocab') {
+                    q = (mode==='vi2en') ? d.vi : d.en;
+                    ans = (mode==='vi2en') ? d.en : d.vi;
+                } else if(type === 'qa') {
+                    q = (mode==='a2q') ? d.a : d.q;
+                    ans = (mode==='a2q') ? d.q : d.a;
+                }
+
+                return `
+                    <div class="p-4 border rounded-lg bg-gray-50 space-y-2">
+                        <p class="font-medium">Câu ${i+1}: <b class="text-indigo-700">${q}</b></p>
+                        <input id="ans-${i}" class="border p-2 w-full rounded focus:ring-2 focus:ring-indigo-400 outline-none" data-correct="${ans.toLowerCase().trim()}" placeholder="Nhập đáp án...">
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function checkAnswers() {
+            const inputs = document.querySelectorAll('input[id^="ans-"]');
+            let correctCount = 0;
+            
+            inputs.forEach(input => {
+                let val = input.value.toLowerCase().replace(/[.,/#!$%^&*;:{}=\-_`~()?]/g, "").replace(/\s+/g, ' ').trim();
+                let cor = input.dataset.correct.replace(/[.,/#!$%^&*;:{}=\-_`~()?]/g, "").replace(/\s+/g, ' ').trim();
+                
+                const isCorrect = (val === cor && val !== "");
+                if(isCorrect) correctCount++;
+                
+                input.disabled = true; 
+                input.className = 'border p-2 w-full rounded font-medium ' + (isCorrect ? 'bg-green-100 border-green-500 text-green-800' : 'bg-red-100 border-red-500 text-red-800');
+                
+                if(!isCorrect) {
+                    input.value = (input.value ? input.value : "Chưa trả lời") + " ➔ (Đúng: " + input.dataset.correct + ")";
+                }
+            });
+
+            const btn = document.getElementById('btn-check');
+            if(btn) {
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+
+            const mood = document.getElementById('mood-board');
+            if(mood) {
+                mood.classList.remove('hidden');
+                let p = inputs.length > 0 ? (correctCount / inputs.length) * 100 : 0;
+                if (p === 100) mood.innerText = "🎉 Xuất sắc! (100%)";
+                else if (p >= 70) mood.innerText = "😃 Tốt lắm! (" + Math.round(p) + "%)";
+                else if (p >= 50) mood.innerText = "😐 Tạm ổn! (" + Math.round(p) + "%)";
+                else mood.innerText = "😟 Cần ôn thêm! (" + Math.round(p) + "%)";
+            }
+        }
+
+        // --- HỆ THỐNG PHÂN TÍCH & THIẾT KẾ ĐOẠN VĂN THÔNG MINH (AI GENERATOR) ---
+        function generateAIStoryFromListeningData() {
+            const validWords = (data.listening || []).filter(v => v.en && v.en.trim() !== '');
+            if(validWords.length === 0) return null;
+
+            const shuffledWords = shuffleArray(validWords);
+
+            // Ngân hàng mẫu câu phù hợp theo đúng ngữ cảnh thực tế của từ
+            const aiTemplates = {
+                // Mẫu cho Lời chào / Giao tiếp (hello, hi, goodbye,...)
+                greeting: [
+                    { eng: (w) => `When I meet someone new, I always say <GAP>${w.en}</GAP> with a warm smile.`, vi: (w) => `Khi gặp ai đó mới, tôi luôn nói <b>${w.vi}</b> với một nụ cười ấm áp.` },
+                    { eng: (w) => `It is polite to say <GAP>${w.en}</GAP> when you enter the classroom.`, vi: (w) => `Nói <b>${w.vi}</b> khi bạn bước vào lớp học là một hành động lịch sự.` }
+                ],
+                // Mẫu cho Tính từ ngoại hình / Tính cách (slender, tall, beautiful,...)
+                personality_appearance: [
+                    { eng: (w) => `She looks very graceful and <GAP>${w.en}</GAP> in her new dress.`, vi: (w) => `Cô ấy trông rất duyên dáng và <b>${w.vi}</b> trong chiếc váy mới.` },
+                    { eng: (w) => `My teacher is known for being extremely <GAP>${w.en}</GAP> and kind.`, vi: (w) => `Giáo viên của tôi nổi tiếng là người cực kỳ <b>${w.vi}</b> và tốt bụng.` }
+                ],
+                // Mẫu cho Tính từ thái độ / Hành vi (careful, smart, quick,...)
+                behavior: [
+                    { eng: (w) => `You should be very <GAP>${w.en}</GAP> when driving on wet roads.`, vi: (w) => `Bạn nên rất <b>${w.vi}</b> khi lái xe trên đường trơn trượt.` },
+                    { eng: (w) => `He is always <GAP>${w.en}</GAP> while handling important documents.`, vi: (w) => `Anh ấy luôn <b>${w.vi}</b> khi xử lý các tài liệu quan trọng.` }
+                ],
+                // Mẫu Mặc định cho Động từ / Danh từ tổng quát
+                general: [
+                    { eng: (w) => `Today, we are going to focus on <GAP>${w.en}</GAP> in our lesson.`, vi: (w) => `Hôm nay, chúng ta sẽ tập trung vào <b>${w.vi}</b> trong bài học.` },
+                    { eng: (w) => `It is important to understand the meaning of <GAP>${w.en}</GAP>.`, vi: (w) => `Việc hiểu rõ ý nghĩa của <b>${w.vi}</b> là rất quan trọng.` }
+                ]
+            };
+
+            let fullEngSentences = [];
+            let fullViSentences = [];
+
+            shuffledWords.forEach((wordObj) => {
+                let cleanWord = { en: wordObj.en.trim(), vi: wordObj.vi.trim() };
+                let enLower = cleanWord.en.toLowerCase();
+                let viLower = cleanWord.vi.toLowerCase();
+                
+                let selectedCategory = aiTemplates.general;
+
+                // Tự động phân tích nghĩa để chọn mẫu câu chính xác 100%
+                if (enLower.includes('hello') || enLower.includes('hi') || viLower.includes('chào')) {
+                    selectedCategory = aiTemplates.greeting;
+                } else if (enLower.includes('slender') || viLower.includes('mảnh') || viLower.includes('gầy') || viLower.includes('đẹp')) {
+                    selectedCategory = aiTemplates.personality_appearance;
+                } else if (enLower.includes('careful') || viLower.includes('cẩn thận') || viLower.includes('kỹ')) {
+                    selectedCategory = aiTemplates.behavior;
+                }
+
+                let randomSentence = selectedCategory[Math.floor(Math.random() * selectedCategory.length)];
+                fullEngSentences.push(randomSentence.eng(cleanWord));
+                fullViSentences.push(randomSentence.vi(cleanWord));
+            });
+
+            return {
+                eng: fullEngSentences.join(" "),
+                vi: fullViSentences.join(" ")
+            };
+        }
+
+        function startListeningPractice() {
+            const validWords = (data.listening || []).filter(v => v.en && v.en.trim() !== '');
+            if(validWords.length === 0) {
+                alert("Vui lòng nhập ít nhất 1 mục trong phần Luyện Nghe trước!");
+                showScreen('listening-input');
+                return;
+            }
+
+            const storyData = generateAIStoryFromListeningData();
+            currentStoryEnglish = storyData.eng.replace(/<\/?GAP>/g, '');
+            currentStoryVietnamese = storyData.vi;
+
+            showScreen('listening-quiz-area');
+            document.getElementById('translation-result').classList.add('hidden');
+            
+            const btnCheck = document.getElementById('btn-check-listening');
+            btnCheck.disabled = false;
+            btnCheck.classList.remove('opacity-50', 'cursor-not-allowed');
+
+            const container = document.getElementById('story-gaps-container');
+            let parts = storyData.eng.split(/(<GAP>.*?<\/GAP>)/g);
+            let gapIndex = 0;
+
+            container.innerHTML = parts.map(part => {
+                if(part.startsWith('<GAP>') && part.endsWith('</GAP>')) {
+                    let targetWord = part.replace('<GAP>', '').replace('</GAP>', '');
+                    let id = `gap-${gapIndex++}`;
+                    return `
+                        <span class="inline-flex items-center gap-1 mx-1">
+                            <input id="${id}" 
+                                   data-target="${targetWord.toLowerCase()}" 
+                                   class="border-b-2 border-purple-500 bg-purple-50 text-center font-bold text-purple-900 outline-none focus:border-purple-700 px-2 py-1 w-32" 
+                                   placeholder="???">
+                            <button onclick="speakText('${targetWord}')" class="text-sm bg-purple-200 text-purple-800 p-1 rounded-full hover:bg-purple-300" title="Nghe riêng từ này">🔊</button>
+                        </span>
+                    `;
+                }
+                return `<span>${part}</span>`;
+            }).join('');
+        }
+
+        function playFullStory() {
+            speakText(currentStoryEnglish);
+        }
+
+        function checkListeningAnswers() {
+            const inputs = document.querySelectorAll('input[id^="gap-"]');
+            let correctCount = 0;
+
+            inputs.forEach(input => {
+                let userAns = input.value.trim().toLowerCase();
+                let target = input.dataset.target.trim().toLowerCase();
+
+                if(userAns === target && userAns !== "") {
+                    correctCount++;
+                    input.className = "border-b-2 border-green-500 bg-green-100 text-center font-bold text-green-900 px-2 py-1 w-32 rounded";
+                } else {
+                    input.className = "border-b-2 border-red-500 bg-red-100 text-center font-bold text-red-900 px-2 py-1 w-32 rounded";
+                    input.value = `${userAns || '❌'} (${target})`;
+                }
+                input.disabled = true;
+            });
+
+            const transBox = document.getElementById('translation-result');
+            document.getElementById('full-english-text').innerText = "📖 Tiếng Anh: " + currentStoryEnglish;
+            document.getElementById('full-vietnamese-text').innerHTML = "🇻🇳 Dịch nghĩa: " + currentStoryVietnamese;
+            transBox.classList.remove('hidden');
+
+            const btnCheck = document.getElementById('btn-check-listening');
+            btnCheck.disabled = true;
+            btnCheck.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+    </script>
+</body>
+</html>
