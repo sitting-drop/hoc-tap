@@ -3,17 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Học Tập Pro - Luyện Nghe AI Thông Minh</title>
+    <title>App Học Tập Pro - Sửa Lỗi Chấm Điểm Công Thức</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 min-h-screen p-4">
-    <main class="max-w-2xl mx-auto bg-white p-6 rounded-xl shadow-lg">
+    <main class="max-w-2xl mx-auto bg-white p-6 rounded-xl shadow-lg relative">
+        
         <!-- Màn hình chính -->
         <div id="main-screen" class="space-y-4">
             <h1 class="text-2xl font-bold text-center text-indigo-700">App Học Tập Pro</h1>
-            <button onclick="showScreen('vocab-input')" class="w-full p-6 bg-indigo-100 rounded-xl font-bold hover:bg-indigo-200 text-indigo-900 text-lg flex items-center justify-center gap-2">📖 Từ Vựng</button>
-            <button onclick="showScreen('qa-input')" class="w-full p-6 bg-emerald-100 rounded-xl font-bold hover:bg-emerald-200 text-emerald-900 text-lg flex items-center justify-center gap-2">❓ Câu Hỏi</button>
-            <button onclick="showScreen('listening-input')" class="w-full p-6 bg-purple-100 rounded-xl font-bold hover:bg-purple-200 text-purple-900 text-lg flex items-center justify-center gap-2">🎧 Luyện Nghe AI & Điền Từ</button>
+            
+            <button onclick="showScreen('vocab-input')" class="w-full p-5 bg-indigo-100 rounded-xl font-bold hover:bg-indigo-200 text-indigo-900 text-lg flex items-center justify-center gap-2">📖 Từ Vựng</button>
+            <button onclick="showScreen('qa-input')" class="w-full p-5 bg-emerald-100 rounded-xl font-bold hover:bg-emerald-200 text-emerald-900 text-lg flex items-center justify-center gap-2">❓ Câu Hỏi</button>
+            <button onclick="showScreen('tenses-input')" class="w-full p-5 bg-amber-100 rounded-xl font-bold hover:bg-amber-200 text-amber-900 text-lg flex items-center justify-center gap-2">⏳ Thì Tiếng Anh</button>
+            <button onclick="showScreen('listening-input')" class="w-full p-5 bg-purple-100 rounded-xl font-bold hover:bg-purple-200 text-purple-900 text-lg flex items-center justify-center gap-2">🎧 Luyện Nghe AI & Điền Từ</button>
         </div>
 
         <!-- Màn hình nhập Từ Vựng -->
@@ -46,13 +49,64 @@
             <button onclick="showScreen('main-screen')" class="w-full py-2 border rounded hover:bg-gray-100">⬅ Quay về</button>
         </div>
 
+        <!-- Màn hình nhập Thì (Tenses) -->
+        <div id="tenses-input" class="hidden space-y-4">
+            <h2 class="font-bold text-xl text-amber-800">⏳ Thì Tiếng Anh (Phân Ngôi Chuẩn)</h2>
+            <p class="text-sm text-gray-500">Chọn các thì, chọn cấp độ và ôn tập cấu trúc hoặc chia động từ thông minh!</p>
+            
+            <button onclick="openTenseSelector()" class="w-full py-3 bg-amber-600 text-white font-bold rounded-lg hover:bg-amber-700 shadow">🎯 Chọn Thì (12 Thì Cơ Bản)</button>
+
+            <div id="selected-tenses-container" class="space-y-2 pt-2">
+                <h3 class="font-semibold text-gray-700 text-sm">Các thì đã chọn để ôn tập:</h3>
+                <div id="tenses-rows" class="space-y-2"></div>
+            </div>
+
+            <!-- Cài đặt Cấp Độ -->
+            <div class="bg-amber-50 p-3 rounded-lg border border-amber-200 space-y-2">
+                <label class="font-bold text-sm text-amber-900 block">📊 Chọn Cấp Độ (Số lượng câu hỏi):</label>
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="setDifficulty('easy')" id="btn-diff-easy" class="py-2 border rounded font-bold text-sm bg-amber-600 text-white">😊 Dễ (5 câu)</button>
+                    <button onclick="setDifficulty('medium')" id="btn-diff-medium" class="py-2 border rounded font-bold text-sm bg-white text-gray-700">😃 Trung bình (10 câu)</button>
+                    <button onclick="setDifficulty('hard')" id="btn-diff-hard" class="py-2 border rounded font-bold text-sm bg-white text-gray-700">🔥 Khó (15 câu)</button>
+                </div>
+            </div>
+
+            <!-- Cài đặt tính giờ ở màn hình trung gian -->
+            <div class="bg-blue-50 p-3 rounded-lg border border-blue-200 flex items-center justify-between">
+                <label class="font-bold text-sm text-blue-900 flex items-center gap-2 cursor-pointer select-none">
+                    <input type="checkbox" id="enable-timer-checkbox" class="w-4 h-4 text-blue-600 rounded cursor-pointer"> 
+                    ⏱️ Bật đồng hồ bấm giờ tính điểm thời gian thực
+                </label>
+            </div>
+
+            <div class="border-t pt-4 space-y-2">
+                <p class="text-sm font-bold text-amber-900">Chọn cách ôn tập:</p>
+                <div class="flex gap-2">
+                    <button onclick="startTensePractice('structure')" class="flex-1 py-3 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700">📝 Ôn Cấu Trúc</button>
+                    <button onclick="startTensePractice('sentences')" class="flex-1 py-3 bg-purple-600 text-white font-bold rounded-lg hover:bg-purple-700">🤖 Bài Tập Chia Động Từ AI</button>
+                </div>
+            </div>
+            <button onclick="clearData('tenses')" class="w-full py-2 bg-red-100 text-red-600 rounded hover:bg-red-200">🧹 Xóa tất cả</button>
+            <button onclick="showScreen('main-screen')" class="w-full py-2 border rounded hover:bg-gray-100">⬅ Quay về</button>
+        </div>
+
+        <!-- Popup Chọn 12 Thì -->
+        <div id="tense-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto">
+                <h3 class="font-bold text-xl text-amber-800 text-center">📋 Chọn Các Thì Cần Học</h3>
+                <div id="modal-tenses-list" class="space-y-2 text-sm"></div>
+                <div class="flex gap-2 pt-4">
+                    <button onclick="saveSelectedTenses()" class="flex-1 py-2 bg-amber-600 text-white font-bold rounded hover:bg-amber-700">✅ Hoàn Tất</button>
+                    <button onclick="closeTenseSelector()" class="flex-1 py-2 border rounded hover:bg-gray-100">❌ Đóng</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Màn hình nhập Luyện Nghe -->
         <div id="listening-input" class="hidden space-y-4">
             <h2 class="font-bold text-xl text-purple-800">Nhập Từ Vựng Luyện Nghe</h2>
-            <p class="text-sm text-gray-500">AI sẽ tự động nhận diện ý nghĩa của từng từ bạn nhập để thiết kế ra bài luyện nghe tự nhiên nhất!</p>
             <div id="listening-rows" class="space-y-2"></div>
             <button onclick="addRow('listening')" class="text-purple-600 font-bold hover:underline">+ Thêm dòng</button>
-            
             <div class="border-t pt-4">
                 <button onclick="startListeningPractice()" class="w-full py-3 bg-purple-600 text-white font-bold rounded-lg hover:bg-purple-700">🤖 AI Tạo Bài Luyện Nghe</button>
             </div>
@@ -62,64 +116,133 @@
 
         <!-- Màn hình Quiz & Ôn Tập -->
         <div id="quiz-area" class="hidden space-y-4">
-            <div id="mood-board" class="text-center text-3xl font-bold py-2 hidden"></div>
+            <div id="timer-box" class="bg-gray-100 p-3 rounded-xl flex items-center justify-between border hidden">
+                <span class="font-semibold text-gray-700 text-sm">⏱️ Thời gian làm bài:</span>
+                <span id="timer-display-text" class="font-bold text-blue-600 text-base">00:00</span>
+            </div>
+
+            <div id="mood-board" class="text-center py-3 hidden rounded-xl bg-gray-100 border text-xl shadow-inner"></div>
+            
             <div id="quiz-list" class="space-y-4"></div>
-            <button id="btn-check" onclick="checkAnswers()" class="w-full py-3 bg-blue-600 text-white font-bold rounded hover:bg-blue-700">✅ Hoàn thành</button>
+            <button id="btn-check" onclick="checkAnswers()" class="w-full py-3 bg-blue-600 text-white font-bold rounded hover:bg-blue-700 shadow">✅ Hoàn thành</button>
             <button onclick="showScreen('main-screen')" class="w-full py-2 border rounded hover:bg-gray-100">❌ Thoát</button>
         </div>
 
         <!-- Màn hình Luyện Nghe Chi Tiết -->
         <div id="listening-quiz-area" class="hidden space-y-6">
-            <h2 class="font-bold text-xl text-purple-800 text-center">🎧 Màn Chơi Luyện Nghe AI</h2>
-            
-            <div class="bg-purple-50 p-4 rounded-xl border border-purple-200 text-center space-y-3">
-                <p class="text-sm font-semibold text-purple-700">Bấm nút bên dưới để nghe toàn bộ đoạn văn AI đã thiết kế:</p>
-                <button onclick="playFullStory()" class="px-6 py-3 bg-purple-600 text-white font-bold rounded-full shadow-lg hover:bg-purple-700 transition flex items-center gap-2 mx-auto text-lg">
-                    🔊 Nghe Toàn Bộ Đoạn Văn
-                </button>
+            <div id="listening-timer-box" class="bg-gray-100 p-3 rounded-xl flex items-center justify-between border hidden">
+                <span class="font-semibold text-gray-700 text-sm">⏱️ Thời gian nghe:</span>
+                <span id="listening-timer-display-text" class="font-bold text-purple-600 text-base">00:00</span>
             </div>
 
+            <h2 class="font-bold text-xl text-purple-800 text-center">🎧 Màn Chơi Luyện Nghe AI</h2>
+            <div class="bg-purple-50 p-4 rounded-xl border border-purple-200 text-center space-y-3">
+                <p class="text-sm font-semibold text-purple-700">Bấm nút bên dưới để nghe toàn bộ đoạn văn:</p>
+                <button onclick="playFullStory()" class="px-6 py-3 bg-purple-600 text-white font-bold rounded-full shadow-lg hover:bg-purple-700 transition flex items-center gap-2 mx-auto text-lg">🔊 Nghe Toàn Bộ Đoạn Văn</button>
+            </div>
             <div id="story-gaps-container" class="p-5 bg-gray-50 border rounded-xl leading-relaxed text-lg space-y-3"></div>
-
             <div id="translation-result" class="hidden p-4 bg-emerald-50 border border-emerald-300 rounded-xl space-y-2">
                 <h3 class="font-bold text-emerald-800">🎉 Hoàn thành! Bản dịch chi tiết toàn bài:</h3>
                 <p id="full-english-text" class="text-gray-800 font-medium italic"></p>
                 <hr class="border-emerald-200">
                 <p id="full-vietnamese-text" class="text-emerald-900"></p>
             </div>
-
-            <button id="btn-check-listening" onclick="checkListeningAnswers()" class="w-full py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700">✅ Kiểm Tra Đáp Án</button>
+            <button id="btn-check-listening" onclick="checkListeningAnswers()" class="w-full py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 shadow">✅ Kiểm Tra Đáp Án</button>
             <button onclick="showScreen('main-screen')" class="w-full py-2 border rounded hover:bg-gray-100">❌ Thoát</button>
         </div>
     </main>
 
     <script>
+        const ALL_12_TENSES_DATA = [
+            { id: "present_simple", name: "Present Simple (Hiện tại đơn)", pos: "I/We/You/They + V1  |  He/She/It + V_s/es", neg: "I/We/You/They + do not + V1  |  He/She/It + does not + V1", que: "Do + I/we/you/they + V1?  |  Does + he/she/it + V1?" },
+            { id: "present_continuous", name: "Present Continuous (Hiện tại tiếp diễn)", pos: "I + am + V-ing  |  We/You/They + are + V-ing  |  He/She/It + is + V-ing", neg: "I + am not + V-ing  |  We/You/They + are not + V-ing  |  He/She/It + is not + V-ing", que: "Am + I + V-ing?  |  Are + we/you/they + V-ing?  |  Is + he/she/it + V-ing?" },
+            { id: "present_perfect", name: "Present Perfect (Hiện tại hoàn thành)", pos: "I/We/You/They + have + V3/ed  |  He/She/It + has + V3/ed", neg: "I/We/You/They + haven't + V3/ed  |  He/She/It + hasn't + V3/ed", que: "Have + I/we/you/they + V3/ed?  |  Has + he/she/it + V3/ed?" },
+            { id: "present_perfect_continuous", name: "Present Perfect Continuous (Hiện tại hoàn thành tiếp diễn)", pos: "I/We/You/They + have been + V-ing  |  He/She/It + has been + V-ing", neg: "I/We/You/They + haven't been + V-ing  |  He/She/It + hasn't been + V-ing", que: "Have + I/we/you/they + been + V-ing?  |  Has + he/she/it + been + V-ing?" },
+            { id: "past_simple", name: "Past Simple (Quá khứ đơn)", pos: "All subjects + V2/ed", neg: "All subjects + did not (didn't) + V1", que: "Did + all subjects + V1?" },
+            { id: "past_continuous", name: "Past Continuous (Quá khứ tiếp diễn)", pos: "I/He/She/It + was + V-ing  |  We/You/They + were + V-ing", neg: "I/He/She/It + wasn't + V-ing  |  We/You/They + weren't + V-ing", que: "Was + I/he/she/it + V-ing?  |  Were + we/you/they + V-ing?" },
+            { id: "past_perfect", name: "Past Perfect (Quá khứ hoàn thành)", pos: "All subjects + had + V3/ed", neg: "All subjects + hadn't + V3/ed", que: "Had + all subjects + V3/ed?" },
+            { id: "past_perfect_continuous", name: "Past Perfect Continuous (Quá khứ hoàn thành tiếp diễn)", pos: "All subjects + had been + V-ing", neg: "All subjects + hadn't been + V-ing", que: "Had + all subjects + been + V-ing?" },
+            { id: "future_simple", name: "Future Simple (Tương lai đơn)", pos: "All subjects + will + V1", neg: "All subjects + will not (won't) + V1", que: "Will + all subjects + V1?" },
+            { id: "future_continuous", name: "Future Continuous (Tương lai tiếp diễn)", pos: "All subjects + will be + V-ing", neg: "All subjects + won't be + V-ing", que: "Will + all subjects + be + V-ing?" },
+            { id: "future_perfect", name: "Future Perfect (Tương lai hoàn thành)", pos: "All subjects + will have + V3/ed", neg: "All subjects + won't have + V3/ed", que: "Will + all subjects + have + V3/ed?" },
+            { id: "future_perfect_continuous", name: "Future Perfect Continuous (Tương lai hoàn thành tiếp diễn)", pos: "All subjects + will have been + V-ing", neg: "All subjects + won't have been + V-ing", que: "Will + all subjects + have been + V-ing?" }
+        ];
+
         let data = JSON.parse(localStorage.getItem('studyDataPro')) || { 
             vocab: [{en: "apple", vi: "quả táo"}, {en: "learn", vi: "học tập"}], 
             qa: [{q: "What is your name?", a: "My name is Nam."}], 
-            listening: [
-                {en: "hello", vi: "chào"}, 
-                {en: "slender", vi: "mảnh mai"}, 
-                {en: "careful", vi: "cẩn thận"}
-            ] 
+            tenses: [ALL_12_TENSES_DATA[0]], 
+            listening: [{en: "hello", vi: "chào"}, {en: "slender", vi: "mảnh mai"}] 
         };
 
+        let currentDifficulty = 'easy';
         let currentStoryEnglish = "";
         let currentStoryVietnamese = "";
+        let currentPracticeMode = 'sentences';
+
+        let timerInterval = null;
+        let secondsElapsed = 0;
+        let isTimerActive = false;
+
+        function startTimer() {
+            stopTimer();
+            secondsElapsed = 0;
+            updateTimerDisplays();
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                updateTimerDisplays();
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if(timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function updateTimerDisplays() {
+            let m = Math.floor(secondsElapsed / 60);
+            let s = secondsElapsed % 60;
+            let timeStr = (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
+            
+            const d1 = document.getElementById('timer-display-text');
+            if(d1) d1.innerText = timeStr;
+            const d2 = document.getElementById('listening-timer-display-text');
+            if(d2) d2.innerText = timeStr;
+        }
 
         function saveData() { localStorage.setItem('studyDataPro', JSON.stringify(data)); }
 
         function showScreen(id) {
-            ['main-screen', 'vocab-input', 'qa-input', 'listening-input', 'quiz-area', 'listening-quiz-area'].forEach(s => {
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            stopTimer();
+
+            ['main-screen', 'vocab-input', 'qa-input', 'tenses-input', 'listening-input', 'quiz-area', 'listening-quiz-area'].forEach(s => {
                 const elem = document.getElementById(s);
                 if(elem) elem.classList.add('hidden');
             });
             const targetElem = document.getElementById(id);
             if(targetElem) targetElem.classList.remove('hidden');
 
+            if(id !== 'quiz-area') {
+                const mb = document.getElementById('mood-board');
+                if(mb) mb.classList.add('hidden');
+            }
+
             if(id === 'vocab-input') renderRows('vocab');
             if(id === 'qa-input') renderRows('qa');
+            if(id === 'tenses-input') renderTensesRows();
             if(id === 'listening-input') renderRows('listening');
+        }
+
+        function setDifficulty(level) {
+            currentDifficulty = level;
+            ['easy', 'medium', 'hard'].forEach(l => {
+                const btn = document.getElementById(`btn-diff-${l}`);
+                if(l === level) btn.className = "py-2 border rounded font-bold text-sm bg-amber-600 text-white shadow";
+                else btn.className = "py-2 border rounded font-bold text-sm bg-white text-gray-700 hover:bg-gray-100";
+            });
         }
 
         function addRow(type) { 
@@ -132,7 +255,6 @@
             saveData();
             const container = document.getElementById(type + '-rows');
             if(!container) return;
-
             let p1 = (type === 'vocab' || type === 'listening') ? 'Tiếng Anh (en)' : 'Câu hỏi (q)';
             let p2 = (type === 'vocab' || type === 'listening') ? 'Tiếng Việt (vi)' : 'Câu trả lời (a)';
 
@@ -143,6 +265,52 @@
                     <button onclick="data['${type}'].splice(${i},1); renderRows('${type}')" class="text-red-500 font-bold px-2 hover:bg-red-50 rounded">X</button>
                 </div>
             `).join('');
+        }
+
+        function renderTensesRows() {
+            saveData();
+            const container = document.getElementById('tenses-rows');
+            if(!container) return;
+            container.innerHTML = (data.tenses || []).map((t, i) => `
+                <div class="bg-amber-50 p-3 rounded-lg border border-amber-200 space-y-2">
+                    <div class="flex gap-2 items-center">
+                        <input class="border p-2 w-full rounded bg-white font-bold text-amber-900" value="${t.name || ''}" placeholder="Tên thì" oninput="data.tenses[${i}].name = this.value; saveData();">
+                        <button onclick="data.tenses.splice(${i},1); renderTensesRows();" class="text-red-500 font-bold px-2">Xóa</button>
+                    </div>
+                    <div class="grid grid-cols-1 gap-2 text-xs">
+                        <div class="flex items-center gap-1"><span class="w-16 font-bold text-amber-900">(+) Khẳng định:</span><input class="border p-1.5 rounded bg-white w-full" value="${t.pos || ''}" oninput="data.tenses[${i}].pos = this.value; saveData();"></div>
+                        <div class="flex items-center gap-1"><span class="w-16 font-bold text-amber-900">(-) Phủ định:</span><input class="border p-1.5 rounded bg-white w-full" value="${t.neg || ''}" oninput="data.tenses[${i}].neg = this.value; saveData();"></div>
+                        <div class="flex items-center gap-1"><span class="w-16 font-bold text-amber-900">(?) Nghi vấn:</span><input class="border p-1.5 rounded bg-white w-full" value="${t.que || ''}" oninput="data.tenses[${i}].que = this.value; saveData();"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openTenseSelector() {
+            const listContainer = document.getElementById('modal-tenses-list');
+            const selectedNames = (data.tenses || []).map(t => t.name);
+            listContainer.innerHTML = ALL_12_TENSES_DATA.map((t, idx) => `
+                <label class="flex items-center gap-2 p-2 rounded hover:bg-gray-100 cursor-pointer">
+                    <input type="checkbox" value="${idx}" ${selectedNames.includes(t.name) ? 'checked' : ''} class="tense-checkbox w-4 h-4 text-amber-600 rounded">
+                    <span class="font-medium text-gray-800">${t.name}</span>
+                </label>
+            `).join('');
+            document.getElementById('tense-modal').classList.remove('hidden');
+        }
+
+        function closeTenseSelector() { document.getElementById('tense-modal').classList.add('hidden'); }
+
+        function saveSelectedTenses() {
+            const checkboxes = document.querySelectorAll('.tense-checkbox:checked');
+            let selected = [];
+            checkboxes.forEach(cb => {
+                let tenseObj = ALL_12_TENSES_DATA[cb.value];
+                selected.push({ id: tenseObj.id || 'custom', name: tenseObj.name, pos: tenseObj.pos, neg: tenseObj.neg, que: tenseObj.que });
+            });
+            data.tenses = selected;
+            saveData();
+            renderTensesRows();
+            closeTenseSelector();
         }
 
         function updateDataField(type, index, fieldType, val) {
@@ -157,238 +325,291 @@
         }
 
         function clearData(type) {
-            if(confirm("Xóa sạch danh sách?")) { data[type] = []; renderRows(type); }
+            if(confirm("Xóa sạch danh sách?")) { data[type] = []; if(type==='tenses') renderTensesRows(); else renderRows(type); }
         }
 
-        function speakText(text, lang = 'en-US') {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = lang;
-                utterance.rate = 0.85;
-                window.speechSynthesis.speak(utterance);
+        function handleTimerSetup() {
+            isTimerActive = document.getElementById('enable-timer-checkbox').checked;
+            const timerBox = document.getElementById('timer-box');
+            if (isTimerActive) {
+                timerBox.classList.remove('hidden');
+                startTimer();
+            } else {
+                timerBox.classList.add('hidden');
+                stopTimer();
             }
         }
 
-        function shuffleArray(array) {
-            let arr = [...array];
-            for (let i = arr.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [arr[i], arr[j]] = [arr[j], arr[i]];
+        // --- HỆ THỐNG AI SINH CÂU HỎI THÔNG MINH ---
+        const SAMPLE_SUBJECTS = [
+            { text: "They", type: "plural" },
+            { text: "We", type: "plural" },
+            { text: "I", type: "i" },
+            { text: "You", type: "plural" },
+            { text: "She", type: "singular" },
+            { text: "He", type: "singular" },
+            { text: "John", type: "singular" }
+        ];
+
+        const SAMPLE_VERBS = [
+            { v1: "play", v2: "played", v3: "played", ing: "playing", es: "plays" },
+            { v1: "eat", v2: "ate", v3: "eaten", ing: "eating", es: "eats" },
+            { v1: "watch", v2: "watched", v3: "watched", ing: "watching", es: "watches" },
+            { v1: "read", v2: "read", v3: "read", ing: "reading", es: "reads" },
+            { v1: "write", v2: "wrote", v3: "written", ing: "writing", es: "writes" },
+            { v1: "clean", v2: "cleaned", v3: "cleaned", ing: "cleaning", es: "cleans" },
+            { v1: "study", v2: "studied", v3: "studied", ing: "studying", es: "studies" },
+            { v1: "drink", v2: "drank", v3: "drunk", ing: "drinking", es: "drinks" }
+        ];
+
+        function generateAiSentenceForTense(tenseName, tenseId) {
+            let subj = SAMPLE_SUBJECTS[Math.floor(Math.random() * SAMPLE_SUBJECTS.length)];
+            let verb = SAMPLE_VERBS[Math.floor(Math.random() * SAMPLE_VERBS.length)];
+            let obj = "football";
+            if (verb.v1 === "eat") obj = "apples";
+            else if (verb.v1 === "watch") obj = "movies";
+            else if (verb.v1 === "read") obj = "books";
+            else if (verb.v1 === "write") obj = "letters";
+            else if (verb.v1 === "clean") obj = "the room";
+            else if (verb.v1 === "study") obj = "English";
+            else if (verb.v1 === "drink") obj = "milk";
+
+            let lowerName = (tenseName + " " + (tenseId || "")).toLowerCase();
+            let correctAnswer = "";
+            let questionText = "";
+
+            if (lowerName.includes("hiện tại đơn") || lowerName.includes("present simple")) {
+                let conjugated = (subj.type === "singular") ? verb.es : verb.v1;
+                if (verb.v1 === "study" && subj.type === "singular") conjugated = "studies";
+                questionText = `[${tenseName}] - Chia động từ trong ngoặc: "${subj.text} ___ (${verb.v1}) ${obj} every day."`;
+                correctAnswer = conjugated;
+            } else if (lowerName.includes("hiện tại tiếp diễn") || lowerName.includes("present continuous")) {
+                let be = "are";
+                if (subj.type === "i") be = "am";
+                else if (subj.type === "singular") be = "is";
+                questionText = `[${tenseName}] - Chia dạng đúng: "${subj.text} ___ (${verb.v1}) ${obj} right now."`;
+                correctAnswer = `${be} ${verb.ing}`;
+            } else if (lowerName.includes("hiện tại hoàn thành") || lowerName.includes("present perfect")) {
+                let haveHas = (subj.type === "singular") ? "has" : "have";
+                questionText = `[${tenseName}] - Chia dạng đúng: "${subj.text} ___ (${verb.v1}) ${obj} already."`;
+                correctAnswer = `${haveHas} ${verb.v3}`;
+            } else if (lowerName.includes("quá khứ đơn") || lowerName.includes("past simple")) {
+                questionText = `[${tenseName}] - Chia dạng đúng: "${subj.text} ___ (${verb.v1}) ${obj} yesterday."`;
+                correctAnswer = verb.v2;
+            } else if (lowerName.includes("quá khứ tiếp diễn") || lowerName.includes("past continuous")) {
+                let wasWere = (subj.type === "singular" || subj.type === "i") ? "was" : "were";
+                questionText = `[${tenseName}] - Chia dạng đúng: "${subj.text} ___ (${verb.v1}) ${obj} at 8 PM last night."`;
+                correctAnswer = `${wasWere} ${verb.ing}`;
+            } else if (lowerName.includes("tương lai đơn") || lowerName.includes("future simple")) {
+                questionText = `[${tenseName}] - Chia dạng đúng: "${subj.text} ___ (${verb.v1}) ${obj} tomorrow."`;
+                correctAnswer = `will ${verb.v1}`;
+            } else {
+                questionText = `[${tenseName}] - Chia động từ thích hợp: "${subj.text} ___ (${verb.v1}) ${obj}."`;
+                correctAnswer = verb.v1;
             }
-            return arr;
+
+            return { q: questionText, a: correctAnswer };
         }
 
-        // --- ÔN TẬP TỪ VỰNG & CÂU HỎI ---
-        function startPractice(type, mode) {
-            const listData = data[type] || [];
-            const items = [...listData].filter(d => {
-                if (type === 'vocab') return (d.en || '').trim() !== '';
-                return (d.q || '').trim() !== '';
-            }).sort(() => Math.random() - 0.5);
+        function startTensePractice(mode) {
+            const validTenses = (data.tenses || []).filter(t => t.name && t.name.trim() !== '');
+            if(validTenses.length === 0) { alert("Vui lòng chọn ít nhất 1 thì để ôn tập!"); return; }
             
-            if(items.length === 0) { alert("Chưa có dữ liệu!"); return; }
-            
-            const btn = document.getElementById('btn-check');
-            if(btn) {
-                btn.disabled = false;
-                btn.classList.remove('opacity-50', 'cursor-not-allowed');
-            }
-
-            const mood = document.getElementById('mood-board');
-            if(mood) mood.classList.add('hidden');
-            
+            currentPracticeMode = mode;
             showScreen('quiz-area');
-            const list = document.getElementById('quiz-list');
-            if(!list) return;
+            document.getElementById('mood-board').classList.add('hidden');
+            document.getElementById('btn-check').classList.remove('hidden');
 
-            list.innerHTML = items.map((d, i) => {
-                let q = "", ans = "";
-                if(type === 'vocab') {
-                    q = (mode==='vi2en') ? d.vi : d.en;
-                    ans = (mode==='vi2en') ? d.en : d.vi;
-                } else if(type === 'qa') {
-                    q = (mode==='a2q') ? d.a : d.q;
-                    ans = (mode==='a2q') ? d.q : d.a;
+            handleTimerSetup();
+
+            const list = document.getElementById('quiz-list');
+            let rawQuestions = [];
+            let targetCount = currentDifficulty === 'easy' ? 5 : (currentDifficulty === 'medium' ? 10 : 15);
+
+            if (mode === 'structure') {
+                validTenses.forEach(t => {
+                    if (t.pos) rawQuestions.push({ q: `[${t.name}] - Nhập công thức thể khẳng định (+)`, a: t.pos });
+                    if (t.neg) rawQuestions.push({ q: `[${t.name}] - Nhập công thức thể phủ định (-)`, a: t.neg });
+                    if (t.que) rawQuestions.push({ q: `[${t.name}] - Nhập công thức thể nghi vấn (?)`, a: t.que });
+                });
+                rawQuestions = rawQuestions.sort(() => Math.random() - 0.5).slice(0, targetCount);
+            } else {
+                for (let i = 0; i < targetCount; i++) {
+                    let randomTense = validTenses[Math.floor(Math.random() * validTenses.length)];
+                    let generated = generateAiSentenceForTense(randomTense.name, randomTense.id);
+                    rawQuestions.push(generated);
                 }
+            }
+
+            list.innerHTML = rawQuestions.map((item, i) => `
+                <div class="p-4 border rounded-lg bg-gray-50 space-y-2">
+                    <p class="font-medium">Câu ${i+1}: <b class="text-indigo-700">${item.q}</b></p>
+                    <input id="ans-${i}" class="border p-2 w-full rounded bg-white outline-none focus:ring-2 focus:ring-indigo-400" data-correct="${item.a.trim()}" placeholder="Nhập câu trả lời...">
+                    <div id="correct-hint-${i}" class="text-red-500 font-bold text-sm hidden"></div>
+                </div>
+            `).join('');
+        }
+
+        // --- BỘ LỌC CHUẨN HÓA CÔNG THỨC THÔNG MINH (KHẮC PHỤC TRIỆT ĐỂ LỖI DẤU CÁCH & DẤU HỎI) ---
+        function normalizeFormula(str) {
+            let s = str.toLowerCase();
+            // Bỏ toàn bộ khoảng trắng để không bị lỗi cách dòng/cách chữ
+            s = s.replace(/\s+/g, '');
+            // Chuẩn hóa các dạng viết tắt
+            s = s.replace(/don't/g, 'donot').replace(/doesn't/g, 'doesnot');
+            s = s.replace(/haven't/g, 'havenot').replace(/hasn't/g, 'hasnot');
+            s = s.replace(/won't/g, 'willnot').replace(/didn't/g, 'didnot');
+            s = s.replace(/hadn't/g, 'hadnot').replace(/weren't/g, 'werenot');
+            s = s.replace(/wasn't/g, 'wasnot').replace(/shan't/g, 'shallnot');
+            return s;
+        }
+
+        function checkAnswers() {
+            if (isTimerActive) stopTimer();
+
+            const inputs = document.querySelectorAll('#quiz-list input');
+            let correct = 0;
+            
+            inputs.forEach((input, i) => {
+                let userVal = input.value.trim();
+                let correctVal = input.getAttribute('data-correct');
+                let hintDiv = document.getElementById(`correct-hint-${i}`);
+                
+                hintDiv.classList.add('hidden');
+                hintDiv.innerText = "";
+
+                let isMatch = false;
+                let cleanUser = normalizeFormula(userVal);
+                let cleanCorrect = normalizeFormula(correctVal);
+
+                if (cleanUser.length > 0 && (cleanUser === cleanCorrect || cleanUser.includes(cleanCorrect) || cleanCorrect.includes(cleanUser))) {
+                    isMatch = true;
+                } else if (userVal.toLowerCase() === correctVal.toLowerCase()) {
+                    isMatch = true;
+                }
+
+                if (isMatch) {
+                    input.className = "border p-2 w-full rounded bg-green-100 border-green-500 cursor-not-allowed";
+                    correct++;
+                } else {
+                    input.className = "border p-2 w-full rounded bg-red-100 border-red-500 cursor-not-allowed";
+                    hintDiv.innerText = `❌ Đáp án đúng: ${correctVal}`;
+                    hintDiv.classList.remove('hidden');
+                }
+                input.disabled = true;
+            });
+
+            document.getElementById('btn-check').classList.add('hidden');
+
+            const moodBoard = document.getElementById('mood-board');
+            moodBoard.classList.remove('hidden');
+            let ratio = correct / inputs.length;
+            
+            let timeMsg = "";
+            if (isTimerActive) {
+                let timeStr = document.getElementById('timer-display-text').innerText;
+                timeMsg = ` (⏱️ Thời gian: ${timeStr})`;
+            }
+
+            if (correct === 0) {
+                moodBoard.innerHTML = `😢 <b>Sai hết rồi! Cố gắng lên nhé!</b> (${correct} / ${inputs.length})${timeMsg}`;
+                moodBoard.className = "text-center py-3 rounded-xl bg-red-100 border border-red-300 text-lg text-red-800 shadow-inner";
+            } else if (ratio === 1) {
+                moodBoard.innerHTML = `🤩🎉 <b>Tuyệt đỉnh! Đúng hết 100%!</b> (${correct} / ${inputs.length})${timeMsg}`;
+                moodBoard.className = "text-center py-3 rounded-xl bg-green-100 border border-green-300 text-lg text-green-800 shadow-inner";
+            } else {
+                moodBoard.innerHTML = `😊 <b>Làm tốt lắm! Tiếp tục phát huy nhé!</b> (${correct} / ${inputs.length})${timeMsg}`;
+                moodBoard.className = "text-center py-3 rounded-xl bg-blue-100 border border-blue-300 text-lg text-blue-800 shadow-inner";
+            }
+        }
+
+        function startPractice(type, mode) {
+            const items = (data[type] || []).filter(item => {
+                let f1 = (type==='vocab') ? item.en : item.q;
+                let f2 = (type==='vocab') ? item.vi : item.a;
+                return f1 && f1.trim() !== '' && f2 && f2.trim() !== '';
+            });
+            if(items.length === 0) { alert("Vui lòng nhập dữ liệu trước khi ôn tập!"); return; }
+            showScreen('quiz-area');
+            document.getElementById('mood-board').classList.add('hidden');
+            document.getElementById('btn-check').classList.remove('hidden');
+            document.getElementById('timer-box').classList.add('hidden');
+            isTimerActive = false;
+            stopTimer();
+
+            const list = document.getElementById('quiz-list');
+            let questionsList = [...items].sort(() => Math.random() - 0.5);
+
+            list.innerHTML = questionsList.map((item, i) => {
+                let questionText = (mode === 'vi2en' || mode === 'a2q') ? ((type==='vocab') ? item.vi : item.a) : ((type==='vocab') ? item.en : item.q);
+                let correctAns = (mode === 'vi2en' || mode === 'a2q') ? ((type==='vocab') ? item.en : item.q) : ((type==='vocab') ? item.vi : item.a);
 
                 return `
                     <div class="p-4 border rounded-lg bg-gray-50 space-y-2">
-                        <p class="font-medium">Câu ${i+1}: <b class="text-indigo-700">${q}</b></p>
-                        <input id="ans-${i}" class="border p-2 w-full rounded focus:ring-2 focus:ring-indigo-400 outline-none" data-correct="${ans.toLowerCase().trim()}" placeholder="Nhập đáp án...">
+                        <p class="font-medium">Câu ${i+1}: Dịch từ/câu: <b class="text-indigo-700">${questionText}</b></p>
+                        <input id="ans-${i}" class="border p-2 w-full rounded bg-white outline-none focus:ring-2 focus:ring-indigo-400" data-correct="${correctAns.trim()}" placeholder="Nhập câu trả lời...">
+                        <div id="correct-hint-${i}" class="text-red-500 font-bold text-sm hidden"></div>
                     </div>
                 `;
             }).join('');
         }
 
-        function checkAnswers() {
-            const inputs = document.querySelectorAll('input[id^="ans-"]');
-            let correctCount = 0;
-            
-            inputs.forEach(input => {
-                let val = input.value.toLowerCase().replace(/[.,/#!$%^&*;:{}=\-_`~()?]/g, "").replace(/\s+/g, ' ').trim();
-                let cor = input.dataset.correct.replace(/[.,/#!$%^&*;:{}=\-_`~()?]/g, "").replace(/\s+/g, ' ').trim();
-                
-                const isCorrect = (val === cor && val !== "");
-                if(isCorrect) correctCount++;
-                
-                input.disabled = true; 
-                input.className = 'border p-2 w-full rounded font-medium ' + (isCorrect ? 'bg-green-100 border-green-500 text-green-800' : 'bg-red-100 border-red-500 text-red-800');
-                
-                if(!isCorrect) {
-                    input.value = (input.value ? input.value : "Chưa trả lời") + " ➔ (Đúng: " + input.dataset.correct + ")";
-                }
-            });
-
-            const btn = document.getElementById('btn-check');
-            if(btn) {
-                btn.disabled = true;
-                btn.classList.add('opacity-50', 'cursor-not-allowed');
-            }
-
-            const mood = document.getElementById('mood-board');
-            if(mood) {
-                mood.classList.remove('hidden');
-                let p = inputs.length > 0 ? (correctCount / inputs.length) * 100 : 0;
-                if (p === 100) mood.innerText = "🎉 Xuất sắc! (100%)";
-                else if (p >= 70) mood.innerText = "😃 Tốt lắm! (" + Math.round(p) + "%)";
-                else if (p >= 50) mood.innerText = "😐 Tạm ổn! (" + Math.round(p) + "%)";
-                else mood.innerText = "😟 Cần ôn thêm! (" + Math.round(p) + "%)";
-            }
-        }
-
-        // --- HỆ THỐNG PHÂN TÍCH & THIẾT KẾ ĐOẠN VĂN THÔNG MINH (AI GENERATOR) ---
-        function generateAIStoryFromListeningData() {
-            const validWords = (data.listening || []).filter(v => v.en && v.en.trim() !== '');
-            if(validWords.length === 0) return null;
-
-            const shuffledWords = shuffleArray(validWords);
-
-            // Ngân hàng mẫu câu phù hợp theo đúng ngữ cảnh thực tế của từ
-            const aiTemplates = {
-                // Mẫu cho Lời chào / Giao tiếp (hello, hi, goodbye,...)
-                greeting: [
-                    { eng: (w) => `When I meet someone new, I always say <GAP>${w.en}</GAP> with a warm smile.`, vi: (w) => `Khi gặp ai đó mới, tôi luôn nói <b>${w.vi}</b> với một nụ cười ấm áp.` },
-                    { eng: (w) => `It is polite to say <GAP>${w.en}</GAP> when you enter the classroom.`, vi: (w) => `Nói <b>${w.vi}</b> khi bạn bước vào lớp học là một hành động lịch sự.` }
-                ],
-                // Mẫu cho Tính từ ngoại hình / Tính cách (slender, tall, beautiful,...)
-                personality_appearance: [
-                    { eng: (w) => `She looks very graceful and <GAP>${w.en}</GAP> in her new dress.`, vi: (w) => `Cô ấy trông rất duyên dáng và <b>${w.vi}</b> trong chiếc váy mới.` },
-                    { eng: (w) => `My teacher is known for being extremely <GAP>${w.en}</GAP> and kind.`, vi: (w) => `Giáo viên của tôi nổi tiếng là người cực kỳ <b>${w.vi}</b> và tốt bụng.` }
-                ],
-                // Mẫu cho Tính từ thái độ / Hành vi (careful, smart, quick,...)
-                behavior: [
-                    { eng: (w) => `You should be very <GAP>${w.en}</GAP> when driving on wet roads.`, vi: (w) => `Bạn nên rất <b>${w.vi}</b> khi lái xe trên đường trơn trượt.` },
-                    { eng: (w) => `He is always <GAP>${w.en}</GAP> while handling important documents.`, vi: (w) => `Anh ấy luôn <b>${w.vi}</b> khi xử lý các tài liệu quan trọng.` }
-                ],
-                // Mẫu Mặc định cho Động từ / Danh từ tổng quát
-                general: [
-                    { eng: (w) => `Today, we are going to focus on <GAP>${w.en}</GAP> in our lesson.`, vi: (w) => `Hôm nay, chúng ta sẽ tập trung vào <b>${w.vi}</b> trong bài học.` },
-                    { eng: (w) => `It is important to understand the meaning of <GAP>${w.en}</GAP>.`, vi: (w) => `Việc hiểu rõ ý nghĩa của <b>${w.vi}</b> là rất quan trọng.` }
-                ]
-            };
-
-            let fullEngSentences = [];
-            let fullViSentences = [];
-
-            shuffledWords.forEach((wordObj) => {
-                let cleanWord = { en: wordObj.en.trim(), vi: wordObj.vi.trim() };
-                let enLower = cleanWord.en.toLowerCase();
-                let viLower = cleanWord.vi.toLowerCase();
-                
-                let selectedCategory = aiTemplates.general;
-
-                // Tự động phân tích nghĩa để chọn mẫu câu chính xác 100%
-                if (enLower.includes('hello') || enLower.includes('hi') || viLower.includes('chào')) {
-                    selectedCategory = aiTemplates.greeting;
-                } else if (enLower.includes('slender') || viLower.includes('mảnh') || viLower.includes('gầy') || viLower.includes('đẹp')) {
-                    selectedCategory = aiTemplates.personality_appearance;
-                } else if (enLower.includes('careful') || viLower.includes('cẩn thận') || viLower.includes('kỹ')) {
-                    selectedCategory = aiTemplates.behavior;
-                }
-
-                let randomSentence = selectedCategory[Math.floor(Math.random() * selectedCategory.length)];
-                fullEngSentences.push(randomSentence.eng(cleanWord));
-                fullViSentences.push(randomSentence.vi(cleanWord));
-            });
-
-            return {
-                eng: fullEngSentences.join(" "),
-                vi: fullViSentences.join(" ")
-            };
-        }
-
         function startListeningPractice() {
-            const validWords = (data.listening || []).filter(v => v.en && v.en.trim() !== '');
-            if(validWords.length === 0) {
-                alert("Vui lòng nhập ít nhất 1 mục trong phần Luyện Nghe trước!");
-                showScreen('listening-input');
-                return;
-            }
-
-            const storyData = generateAIStoryFromListeningData();
-            currentStoryEnglish = storyData.eng.replace(/<\/?GAP>/g, '');
-            currentStoryVietnamese = storyData.vi;
+            const items = (data.listening || []).filter(item => item.en && item.en.trim() !== '' && item.vi && item.vi.trim() !== '');
+            if(items.length === 0) { alert("Vui lòng nhập từ vựng luyện nghe trước!"); return; }
 
             showScreen('listening-quiz-area');
+            document.getElementById('listening-timer-box').classList.add('hidden');
             document.getElementById('translation-result').classList.add('hidden');
-            
-            const btnCheck = document.getElementById('btn-check-listening');
-            btnCheck.disabled = false;
-            btnCheck.classList.remove('opacity-50', 'cursor-not-allowed');
+            document.getElementById('btn-check-listening').classList.remove('hidden');
 
-            const container = document.getElementById('story-gaps-container');
-            let parts = storyData.eng.split(/(<GAP>.*?<\/GAP>)/g);
-            let gapIndex = 0;
+            let shuffled = [...items].sort(() => Math.random() - 0.5).slice(0, Math.min(items.length, 4));
+            let englishWords = shuffled.map(i => i.en.trim());
+            let vietnameseMeanings = shuffled.map(i => i.vi.trim());
 
-            container.innerHTML = parts.map(part => {
-                if(part.startsWith('<GAP>') && part.endsWith('</GAP>')) {
-                    let targetWord = part.replace('<GAP>', '').replace('</GAP>', '');
-                    let id = `gap-${gapIndex++}`;
-                    return `
-                        <span class="inline-flex items-center gap-1 mx-1">
-                            <input id="${id}" 
-                                   data-target="${targetWord.toLowerCase()}" 
-                                   class="border-b-2 border-purple-500 bg-purple-50 text-center font-bold text-purple-900 outline-none focus:border-purple-700 px-2 py-1 w-32" 
-                                   placeholder="???">
-                            <button onclick="speakText('${targetWord}')" class="text-sm bg-purple-200 text-purple-800 p-1 rounded-full hover:bg-purple-300" title="Nghe riêng từ này">🔊</button>
-                        </span>
-                    `;
-                }
-                return `<span>${part}</span>`;
-            }).join('');
+            currentStoryEnglish = `Yesterday, I wanted to learn about ${englishWords[0]}. It was truly amazing. Later, my friend tried to explain ${englishWords[1]} very carefully. We spent hours discussing how to master ${englishWords[2]} and practiced ${englishWords[3]} together until sunset.`;
+            currentStoryVietnamese = `Hôm qua, tôi muốn tìm hiểu về ${vietnameseMeanings[0]}. Thật sự rất tuyệt vời. Sau đó, bạn tôi đã cố gắng giải thích ${vietnameseMeanings[1]} một cách rất cẩn thận. Chúng tôi đã dành hàng giờ thảo luận cách làm chủ ${vietnameseMeanings[2]} và cùng nhau luyện tập ${vietnameseMeanings[3]} cho đến khi hoàng hôn buông xuống.`;
+
+            let containerText = currentStoryEnglish;
+            englishWords.forEach((word) => {
+                let regex = new RegExp(`\\b${word}\\b`, 'gi');
+                containerText = containerText.replace(regex, `<input class="listening-gap border-b-2 border-purple-400 bg-purple-50 px-2 py-1 text-center rounded mx-1 outline-none focus:border-purple-700 font-bold text-purple-900" data-answer="${word.toLowerCase()}" placeholder="(?)" style="width: 120px;">`);
+            });
+
+            document.getElementById('story-gaps-container').innerHTML = containerText;
         }
 
         function playFullStory() {
-            speakText(currentStoryEnglish);
+            if (!('speechSynthesis' in window)) { alert("Trình duyệt của bạn không hỗ trợ phát âm thanh!"); return; }
+            window.speechSynthesis.cancel();
+            let utterance = new SpeechSynthesisUtterance(currentStoryEnglish);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
         }
 
         function checkListeningAnswers() {
-            const inputs = document.querySelectorAll('input[id^="gap-"]');
-            let correctCount = 0;
+            const inputs = document.querySelectorAll('.listening-gap');
+            let correct = 0;
 
             inputs.forEach(input => {
-                let userAns = input.value.trim().toLowerCase();
-                let target = input.dataset.target.trim().toLowerCase();
+                let userVal = input.value.trim().toLowerCase();
+                let correctVal = input.getAttribute('data-answer');
 
-                if(userAns === target && userAns !== "") {
-                    correctCount++;
-                    input.className = "border-b-2 border-green-500 bg-green-100 text-center font-bold text-green-900 px-2 py-1 w-32 rounded";
+                if (userVal === correctVal) {
+                    input.className = "border-b-2 border-green-500 bg-green-100 px-2 py-1 text-center rounded mx-1 font-bold text-green-900 cursor-not-allowed";
+                    correct++;
                 } else {
-                    input.className = "border-b-2 border-red-500 bg-red-100 text-center font-bold text-red-900 px-2 py-1 w-32 rounded";
-                    input.value = `${userAns || '❌'} (${target})`;
+                    input.className = "border-b-2 border-red-500 bg-red-100 px-2 py-1 text-center rounded mx-1 font-bold text-red-900 cursor-not-allowed";
+                    input.value = `${input.value} (${correctVal})`;
                 }
                 input.disabled = true;
             });
 
-            const transBox = document.getElementById('translation-result');
-            document.getElementById('full-english-text').innerText = "📖 Tiếng Anh: " + currentStoryEnglish;
-            document.getElementById('full-vietnamese-text').innerHTML = "🇻🇳 Dịch nghĩa: " + currentStoryVietnamese;
-            transBox.classList.remove('hidden');
-
-            const btnCheck = document.getElementById('btn-check-listening');
-            btnCheck.disabled = true;
-            btnCheck.classList.add('opacity-50', 'cursor-not-allowed');
+            document.getElementById('btn-check-listening').classList.add('hidden');
+            document.getElementById('full-english-text').innerText = currentStoryEnglish;
+            document.getElementById('full-vietnamese-text').innerText = currentStoryVietnamese;
+            document.getElementById('translation-result').classList.remove('hidden');
         }
     </script>
 </body>
