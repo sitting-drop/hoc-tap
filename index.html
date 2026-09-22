@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Học Tập Pro - Sửa Lỗi Chấm Điểm Công Thức</title>
+    <title>App Học Tập Pro - Đã Sửa Giao Diện Ảnh</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 min-h-screen p-4">
@@ -17,6 +17,7 @@
             <button onclick="showScreen('qa-input')" class="w-full p-5 bg-emerald-100 rounded-xl font-bold hover:bg-emerald-200 text-emerald-900 text-lg flex items-center justify-center gap-2">❓ Câu Hỏi</button>
             <button onclick="showScreen('tenses-input')" class="w-full p-5 bg-amber-100 rounded-xl font-bold hover:bg-amber-200 text-amber-900 text-lg flex items-center justify-center gap-2">⏳ Thì Tiếng Anh</button>
             <button onclick="showScreen('listening-input')" class="w-full p-5 bg-purple-100 rounded-xl font-bold hover:bg-purple-200 text-purple-900 text-lg flex items-center justify-center gap-2">🎧 Luyện Nghe AI & Điền Từ</button>
+            <button onclick="showScreen('image-input')" class="w-full p-5 bg-rose-100 rounded-xl font-bold hover:bg-rose-200 text-rose-900 text-lg flex items-center justify-center gap-2">🖼️ Kiểm Tra Hình Ảnh</button>
         </div>
 
         <!-- Màn hình nhập Từ Vựng -->
@@ -24,6 +25,14 @@
             <h2 class="font-bold text-xl text-indigo-800">Nhập Từ Vựng</h2>
             <div id="vocab-rows" class="space-y-2"></div>
             <button onclick="addRow('vocab')" class="text-indigo-600 font-bold hover:underline">+ Thêm dòng</button>
+            
+            <div class="bg-blue-50 p-3 rounded-lg border border-blue-200 flex items-center justify-between">
+                <label class="font-bold text-sm text-blue-900 flex items-center gap-2 cursor-pointer select-none">
+                    <input type="checkbox" id="enable-vocab-timer-checkbox" class="w-4 h-4 text-blue-600 rounded cursor-pointer"> 
+                    ⏱️ Bật đồng hồ bấm giờ tính thời gian làm bài
+                </label>
+            </div>
+
             <div class="border-t pt-4">
                 <div class="flex gap-2">
                     <button onclick="startPractice('vocab', 'vi2en')" class="flex-1 py-2 bg-indigo-600 text-white rounded font-medium hover:bg-indigo-700">Việt sang Anh</button>
@@ -39,6 +48,14 @@
             <h2 class="font-bold text-xl text-emerald-800">Nhập Câu Hỏi</h2>
             <div id="qa-rows" class="space-y-2"></div>
             <button onclick="addRow('qa')" class="text-emerald-600 font-bold hover:underline">+ Thêm dòng</button>
+            
+            <div class="bg-blue-50 p-3 rounded-lg border border-blue-200 flex items-center justify-between">
+                <label class="font-bold text-sm text-blue-900 flex items-center gap-2 cursor-pointer select-none">
+                    <input type="checkbox" id="enable-qa-timer-checkbox" class="w-4 h-4 text-blue-600 rounded cursor-pointer"> 
+                    ⏱️ Bật đồng hồ bấm giờ tính thời gian làm bài
+                </label>
+            </div>
+
             <div class="border-t pt-4">
                 <div class="flex gap-2">
                     <button onclick="startPractice('qa', 'a2q')" class="flex-1 py-2 bg-emerald-600 text-white rounded font-medium hover:bg-emerald-700">Trả lời → Hỏi</button>
@@ -61,7 +78,6 @@
                 <div id="tenses-rows" class="space-y-2"></div>
             </div>
 
-            <!-- Cài đặt Cấp Độ -->
             <div class="bg-amber-50 p-3 rounded-lg border border-amber-200 space-y-2">
                 <label class="font-bold text-sm text-amber-900 block">📊 Chọn Cấp Độ (Số lượng câu hỏi):</label>
                 <div class="grid grid-cols-3 gap-2">
@@ -71,7 +87,6 @@
                 </div>
             </div>
 
-            <!-- Cài đặt tính giờ ở màn hình trung gian -->
             <div class="bg-blue-50 p-3 rounded-lg border border-blue-200 flex items-center justify-between">
                 <label class="font-bold text-sm text-blue-900 flex items-center gap-2 cursor-pointer select-none">
                     <input type="checkbox" id="enable-timer-checkbox" class="w-4 h-4 text-blue-600 rounded cursor-pointer"> 
@@ -107,10 +122,39 @@
             <h2 class="font-bold text-xl text-purple-800">Nhập Từ Vựng Luyện Nghe</h2>
             <div id="listening-rows" class="space-y-2"></div>
             <button onclick="addRow('listening')" class="text-purple-600 font-bold hover:underline">+ Thêm dòng</button>
+            
+            <div class="bg-blue-50 p-3 rounded-lg border border-blue-200 flex items-center justify-between">
+                <label class="font-bold text-sm text-blue-900 flex items-center gap-2 cursor-pointer select-none">
+                    <input type="checkbox" id="enable-listening-timer-checkbox" class="w-4 h-4 text-blue-600 rounded cursor-pointer"> 
+                    ⏱️ Bật đồng hồ bấm giờ tính thời gian làm bài
+                </label>
+            </div>
+
             <div class="border-t pt-4">
                 <button onclick="startListeningPractice()" class="w-full py-3 bg-purple-600 text-white font-bold rounded-lg hover:bg-purple-700">🤖 AI Tạo Bài Luyện Nghe</button>
             </div>
             <button onclick="clearData('listening')" class="w-full py-2 bg-red-100 text-red-600 rounded hover:bg-red-200">🧹 Xóa tất cả</button>
+            <button onclick="showScreen('main-screen')" class="w-full py-2 border rounded hover:bg-gray-100">⬅ Quay về</button>
+        </div>
+
+        <!-- Màn hình nhập Kiểm Tra Hình Ảnh (CHỈ HIỆN TÊN, KHÔNG HIỆN HÌNH ẢNH) -->
+        <div id="image-input" class="hidden space-y-4">
+            <h2 class="font-bold text-xl text-rose-800">🖼️ Nhập Danh Sách Hình Ảnh & Đáp Án</h2>
+            <p class="text-sm text-gray-500">Tải ảnh lên, ứng dụng sẽ ghi nhận tên file và tự động lưu vào bộ nhớ trình duyệt[cite: 3].</p>
+            <div id="image-rows" class="space-y-3"></div>
+            <button onclick="addImageRow()" class="text-rose-600 font-bold hover:underline">+ Thêm dòng ảnh</button>
+            
+            <div class="bg-blue-50 p-3 rounded-lg border border-blue-200 flex items-center justify-between mt-4">
+                <label class="font-bold text-sm text-blue-900 flex items-center gap-2 cursor-pointer select-none">
+                    <input type="checkbox" id="enable-image-timer-checkbox" class="w-4 h-4 text-blue-600 rounded cursor-pointer"> 
+                    ⏱️ Bật đồng hồ bấm giờ tính thời gian làm bài
+                </label>
+            </div>
+
+            <div class="border-t pt-4">
+                <button onclick="startImagePractice()" class="w-full py-3 bg-rose-600 text-white font-bold rounded-lg hover:bg-rose-700 shadow">🚀 Bắt Đầu Kiểm Tra Hình Ảnh</button>
+            </div>
+            <button onclick="clearData('images')" class="w-full py-2 bg-red-100 text-red-600 rounded hover:bg-red-200">🧹 Xóa tất cả</button>
             <button onclick="showScreen('main-screen')" class="w-full py-2 border rounded hover:bg-gray-100">⬅ Quay về</button>
         </div>
 
@@ -172,7 +216,8 @@
             vocab: [{en: "apple", vi: "quả táo"}, {en: "learn", vi: "học tập"}], 
             qa: [{q: "What is your name?", a: "My name is Nam."}], 
             tenses: [ALL_12_TENSES_DATA[0]], 
-            listening: [{en: "hello", vi: "chào"}, {en: "slender", vi: "mảnh mai"}] 
+            listening: [{en: "hello", vi: "chào"}, {en: "slender", vi: "mảnh mai"}],
+            images: []
         };
 
         let currentDifficulty = 'easy';
@@ -218,7 +263,7 @@
             if ('speechSynthesis' in window) window.speechSynthesis.cancel();
             stopTimer();
 
-            ['main-screen', 'vocab-input', 'qa-input', 'tenses-input', 'listening-input', 'quiz-area', 'listening-quiz-area'].forEach(s => {
+            ['main-screen', 'vocab-input', 'qa-input', 'tenses-input', 'listening-input', 'image-input', 'quiz-area', 'listening-quiz-area'].forEach(s => {
                 const elem = document.getElementById(s);
                 if(elem) elem.classList.add('hidden');
             });
@@ -234,6 +279,7 @@
             if(id === 'qa-input') renderRows('qa');
             if(id === 'tenses-input') renderTensesRows();
             if(id === 'listening-input') renderRows('listening');
+            if(id === 'image-input') renderImageRows();
         }
 
         function setDifficulty(level) {
@@ -241,7 +287,7 @@
             ['easy', 'medium', 'hard'].forEach(l => {
                 const btn = document.getElementById(`btn-diff-${l}`);
                 if(l === level) btn.className = "py-2 border rounded font-bold text-sm bg-amber-600 text-white shadow";
-                else btn.className = "py-2 border rounded font-bold text-sm bg-white text-gray-700 hover:bg-gray-100";
+                else btn.className = "py-2 border rounded font-bold text-sm bg-white text-gray-700 hover:bg-gray-150";
             });
         }
 
@@ -249,6 +295,49 @@
             if(!data[type]) data[type] = [];
             data[type].push({en: '', vi: '', q: '', a: ''}); 
             renderRows(type); 
+        }
+
+        function addImageRow() {
+            if(!data.images) data.images = [];
+            data.images.push({name: '', dataUrl: '', answer: ''});
+            renderImageRows();
+        }
+
+        // GIAO DIỆN NHẬP ẢNH: CHỈ HIỆN TÊN ẢNH, CẤM HIỆN ẢNH THU NHỎ
+        function renderImageRows() {
+            saveData();
+            const container = document.getElementById('image-rows');
+            if(!container) return;
+            container.innerHTML = (data.images || []).map((img, i) => `
+                <div class="p-3 border rounded-lg bg-gray-50 space-y-2">
+                    <div class="flex gap-2 items-center">
+                        <input type="file" accept="image/*" class="border p-1 w-full rounded bg-white text-sm" onchange="handleImageUpload(event, ${i})">
+                        <button onclick="data.images.splice(${i},1); renderImageRows();" class="text-red-500 font-bold px-2 hover:bg-red-50 rounded">X</button>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold text-gray-600 w-24">Tên ảnh:</span>
+                        <input class="border p-1.5 w-full rounded bg-gray-100 text-sm font-semibold text-rose-800" readonly value="${img.name || 'Chưa chọn ảnh'}" id="img-name-display-${i}">
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold text-gray-600 w-24">Đáp án ảnh:</span>
+                        <input placeholder="Nhập đáp án cho ảnh này..." class="border p-2 w-full rounded bg-white focus:ring-2 focus:ring-rose-400 outline-none text-sm" value="${img.answer || ''}" oninput="data.images[${i}].answer = this.value; saveData();">
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function handleImageUpload(event, index) {
+            const file = event.target.files[0];
+            if(file) {
+                data.images[index].name = file.name;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    data.images[index].dataUrl = e.target.result;
+                    saveData();
+                    renderImageRows();
+                };
+                reader.readAsDataURL(file);
+            }
         }
 
         function renderRows(type) {
@@ -325,11 +414,17 @@
         }
 
         function clearData(type) {
-            if(confirm("Xóa sạch danh sách?")) { data[type] = []; if(type==='tenses') renderTensesRows(); else renderRows(type); }
+            if(confirm("Xóa sạch danh sách?")) { 
+                data[type] = []; 
+                if(type==='tenses') renderTensesRows(); 
+                else if(type==='images') renderImageRows();
+                else renderRows(type); 
+            }
         }
 
-        function handleTimerSetup() {
-            isTimerActive = document.getElementById('enable-timer-checkbox').checked;
+        function handleTimerSetup(checkboxId) {
+            let cb = document.getElementById(checkboxId);
+            isTimerActive = cb ? cb.checked : false;
             const timerBox = document.getElementById('timer-box');
             if (isTimerActive) {
                 timerBox.classList.remove('hidden');
@@ -340,7 +435,6 @@
             }
         }
 
-        // --- HỆ THỐNG AI SINH CÂU HỎI THÔNG MINH ---
         const SAMPLE_SUBJECTS = [
             { text: "They", type: "plural" },
             { text: "We", type: "plural" },
@@ -420,7 +514,7 @@
             document.getElementById('mood-board').classList.add('hidden');
             document.getElementById('btn-check').classList.remove('hidden');
 
-            handleTimerSetup();
+            handleTimerSetup('enable-timer-checkbox');
 
             const list = document.getElementById('quiz-list');
             let rawQuestions = [];
@@ -450,12 +544,35 @@
             `).join('');
         }
 
-        // --- BỘ LỌC CHUẨN HÓA CÔNG THỨC THÔNG MINH (KHẮC PHỤC TRIỆT ĐỂ LỖI DẤU CÁCH & DẤU HỎI) ---
+        // KHI TRONG TRANG ĐANG KIỂM TRA: CHỈ HIỆN HÌNH ẢNH, CẤM HIỆN TÊN ẢNH
+        function startImagePractice() {
+            const validImages = (data.images || []).filter(img => img.dataUrl && img.answer && img.answer.trim() !== '');
+            if(validImages.length === 0) { alert("Vui lòng tải ảnh lên và nhập đáp án trước khi bắt đầu kiểm tra!"); return; }
+
+            showScreen('quiz-area');
+            document.getElementById('mood-board').classList.add('hidden');
+            document.getElementById('btn-check').classList.remove('hidden');
+
+            handleTimerSetup('enable-image-timer-checkbox');
+
+            const list = document.getElementById('quiz-list');
+            let shuffledImages = [...validImages].sort(() => Math.random() - 0.5);
+
+            list.innerHTML = shuffledImages.map((img, i) => `
+                <div class="p-4 border rounded-lg bg-gray-50 space-y-3">
+                    <p class="font-bold text-rose-800">Câu ${i+1}: Hãy nhìn hình ảnh dưới đây và đoán đáp án:</p>
+                    <div class="flex justify-center bg-white p-2 rounded-lg border">
+                        <img src="${img.dataUrl}" class="max-h-60 object-contain rounded" alt="Ảnh kiểm tra">
+                    </div>
+                    <input id="ans-${i}" class="border p-2 w-full rounded bg-white outline-none focus:ring-2 focus:ring-rose-400" data-correct="${img.answer.trim()}" placeholder="Nhập đáp án của hình ảnh này...">
+                    <div id="correct-hint-${i}" class="text-red-500 font-bold text-sm hidden"></div>
+                </div>
+            `).join('');
+        }
+
         function normalizeFormula(str) {
             let s = str.toLowerCase();
-            // Bỏ toàn bộ khoảng trắng để không bị lỗi cách dòng/cách chữ
             s = s.replace(/\s+/g, '');
-            // Chuẩn hóa các dạng viết tắt
             s = s.replace(/don't/g, 'donot').replace(/doesn't/g, 'doesnot');
             s = s.replace(/haven't/g, 'havenot').replace(/hasn't/g, 'hasnot');
             s = s.replace(/won't/g, 'willnot').replace(/didn't/g, 'didnot');
@@ -533,9 +650,9 @@
             showScreen('quiz-area');
             document.getElementById('mood-board').classList.add('hidden');
             document.getElementById('btn-check').classList.remove('hidden');
-            document.getElementById('timer-box').classList.add('hidden');
-            isTimerActive = false;
-            stopTimer();
+
+            let checkboxId = (type === 'vocab') ? 'enable-vocab-timer-checkbox' : 'enable-qa-timer-checkbox';
+            handleTimerSetup(checkboxId);
 
             const list = document.getElementById('quiz-list');
             let questionsList = [...items].sort(() => Math.random() - 0.5);
@@ -559,9 +676,16 @@
             if(items.length === 0) { alert("Vui lòng nhập từ vựng luyện nghe trước!"); return; }
 
             showScreen('listening-quiz-area');
-            document.getElementById('listening-timer-box').classList.add('hidden');
             document.getElementById('translation-result').classList.add('hidden');
             document.getElementById('btn-check-listening').classList.remove('hidden');
+
+            handleTimerSetup('enable-listening-timer-checkbox');
+            const lTimerBox = document.getElementById('listening-timer-box');
+            if (isTimerActive) {
+                lTimerBox.classList.remove('hidden');
+            } else {
+                lTimerBox.classList.add('hidden');
+            }
 
             let shuffled = [...items].sort(() => Math.random() - 0.5).slice(0, Math.min(items.length, 4));
             let englishWords = shuffled.map(i => i.en.trim());
@@ -589,6 +713,8 @@
         }
 
         function checkListeningAnswers() {
+            if (isTimerActive) stopTimer();
+
             const inputs = document.querySelectorAll('.listening-gap');
             let correct = 0;
 
